@@ -58,6 +58,21 @@ def classify_image(interpreter, image, top_k=1):
 
   ordered = np.argpartition(-output, top_k)
   return [(i, output[i]) for i in ordered[:top_k]]
+  
+# font
+font = cv2.FONT_HERSHEY_SIMPLEX
+  
+# org
+org = (50, 50)
+  
+# fontScale
+fontScale = 1
+   
+# Blue color in BGR
+color = (255, 0, 0)
+  
+# Line thickness of 2 px
+thickness = 2
 
 
 def main():
@@ -80,8 +95,6 @@ def main():
   while cap.isOpened(): 
     ret, frame = cap.read()
     
-    # Show image 
-    cv2.imshow('Webcam', frame)
     print(frame.shape, type(frame))
     print(width, height)
     image = cv2.resize(frame, dsize=(width, height), interpolation = cv2.INTER_CUBIC)
@@ -90,7 +103,9 @@ def main():
     elapsed_ms = (time.time() - start_time) * 1000
     label_id, prob = results[0]
     print('%s %.2f\n%.1fms' % (labels[label_id], prob, elapsed_ms))
-    
+    image = cv2.putText(frame, '%s %.2f %.1fms' % (labels[label_id], prob, elapsed_ms), org, font, fontScale, color, thickness, cv2.LINE_AA)
+    cv2.imshow('Webcam', frame)
+
     # Checks whether q has been hit and stops the loop
     if cv2.waitKey(1) & 0xFF == ord('q'): 
       break
